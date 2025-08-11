@@ -31,8 +31,8 @@ export default function Sidebar() {
               href={href}
               className={`flex items-center gap-3 px-4 py-2 rounded-lg mb-2 transition-colors ${
                 active
-                  ? "bg-gray-800 text-white"
-                  : "text-gray-400 hover:bg-gray-200"
+                  ? "bg-gray-900 text-white"
+                  : "text-gray-400 hover:bg-gray-900"
               }`}
             >
               <Icon size={20} />
