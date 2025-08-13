@@ -1,6 +1,5 @@
 "use client"
-import { useState, useEffect } from "react";
-import { FAKE_DATA } from "@/constants/data";
+import { useState, useEffect, useRef } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -8,10 +7,13 @@ import {
   flexRender
 } from "@tanstack/react-table";
 import axios from "axios";
+import millify from "millify";
 
 // home page (market overview)
 export default function Home() {
+  const tableRef = useRef<HTMLTableElement | null>(null);
   const [data, setData] = useState([]);
+  const [page, setPage] = useState(1);
 
   // Fetch data from CoinGecko API
   useEffect(() => {
@@ -23,7 +25,7 @@ export default function Home() {
             vs_currency: "usd",
             order: "market_cap_desc",
             per_page: 20,
-            page: 1,
+            page: page,
             sparkline: false
           }
         },
@@ -33,10 +35,10 @@ export default function Home() {
 
     fetchData();
 
-    // Optional: refresh every 60s
-    const interval = setInterval(fetchData, 60000);
+    // Optional: refresh every 30s
+    const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [page]);
 
   // Table columns
   const columns = [
@@ -49,13 +51,13 @@ export default function Home() {
       accessorKey: "name",
       header: "Coin",
       cell: ({ row }: any) => (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 cursor-pointer">
           <img
             src={row.original.image}
             alt={row.original.name}
             className="w-6 h-6"
           />
-          <span className="text-sm">{row.original.name}</span> <span className="uppercase text-sm text-gray-600">{row.original.symbol}</span>
+          <span className="text-sm font-semibold">{row.original.name}</span> <span className="uppercase text-sm text-gray-600">{row.original.symbol}</span>
         </div>
       )
     },
@@ -63,7 +65,7 @@ export default function Home() {
       accessorKey: "current_price",
       header: "Price (USD)",
       cell: ({ getValue }: any) =>
-        `$${getValue().toLocaleString()}`
+        <span className="text-sm">${getValue().toLocaleString()}</span>
     },
     {
       accessorKey: "price_change_percentage_24h",
@@ -72,9 +74,9 @@ export default function Home() {
         const value = getValue();
         return (
           <span
-            className={
+            className={`${
               value >= 0 ? "text-green-500" : "text-red-500"
-            }
+            } text-sm`}
           >
             {value.toFixed(2)}%
           </span>
@@ -85,13 +87,16 @@ export default function Home() {
       accessorKey: "market_cap",
       header: "Market Cap",
       cell: ({ getValue }: any) =>
-        `$${getValue().toLocaleString()}`
+        <span className="text-sm">${getValue().toLocaleString()}</span>
     },
     {
       accessorKey: "circulating_supply",
       header: "Circulating Supply",
-      cell: ({ getValue }: any) =>
-        `${getValue()}`
+      cell: ({ getValue, row }: any) => (
+        <>
+          <span className="text-sm">{millify(getValue())}</span> <span className="uppercase text-sm">{row.original.symbol}</span>
+        </>
+      )
     },
   ];
 
@@ -106,7 +111,7 @@ export default function Home() {
   return (
     <div>
       <div className="overflow-x-auto">
-        <table className="min-w-full">
+        <table ref={tableRef} className="min-w-full">
           <thead>
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
@@ -130,7 +135,7 @@ export default function Home() {
             {table.getRowModel().rows.map(row => (
               <tr
                 key={row.id}
-                className="border-t border-t-gray-800 hover:bg-gray-900 cursor-pointer"
+                className="border-t border-t-gray-800 hover:bg-gray-900"
               >
                 {row.getVisibleCells().map(cell => (
                   <td key={cell.id} className="p-3">
@@ -144,6 +149,29 @@ export default function Home() {
             ))}
           </tbody>
         </table>
+        <div className="flex justify-center items-center mt-5">
+          <div className="bg-gray-800 w-1/3 py-2 px-1 rounded-full flex justify-evenly items-center">
+            {[1, 2, 3, 4, 5].map((num) => (
+              <button
+                key={num}
+                className={`
+                  px-3 py-1 rounded-full transition-colors duration-200
+                  ${page === num 
+                    ? "text-emerald-400 font-bold bg-gray-700" // active page
+                    : "text-gray-400 hover:text-white"}        // inactive page
+                `}
+                disabled={page === num}
+                onClick={() => {
+                  setPage(num);
+                  tableRef.current?.scrollIntoView({ behavior: "smooth" });
+                }}
+              >
+                {num}
+              </button>
+            ))}
+          </div>
+        </div>
+
       </div>
     </div>
   );
