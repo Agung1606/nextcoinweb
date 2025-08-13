@@ -9,14 +9,16 @@ import {
 import axios from "axios";
 import millify from "millify";
 
+
 // home page (market overview)
 export default function Home() {
   const tableRef = useRef<HTMLTableElement | null>(null);
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
-
+  
   // Fetch data from CoinGecko API
   useEffect(() => {
+    // TODO: create loading state
     const fetchData = async () => {
       const res = await axios.get(
         "https://api.coingecko.com/api/v3/coins/markets",
@@ -57,7 +59,7 @@ export default function Home() {
             alt={row.original.name}
             className="w-6 h-6"
           />
-          <span className="text-sm font-semibold">{row.original.name}</span> <span className="uppercase text-sm text-gray-600">{row.original.symbol}</span>
+          <span className="text-sm font-semibold">{row.original.name}</span> <span className="uppercase text-sm text-[var(--color-text-secondary)]">{row.original.symbol}</span>
         </div>
       )
     },
@@ -75,7 +77,7 @@ export default function Home() {
         return (
           <span
             className={`${
-              value >= 0 ? "text-green-500" : "text-red-500"
+              value >= 0 ? "text-[var(--color-state-success)]" : "text-[var(--color-state-danger)]"
             } text-sm`}
           >
             {value.toFixed(2)}%
@@ -135,7 +137,7 @@ export default function Home() {
             {table.getRowModel().rows.map(row => (
               <tr
                 key={row.id}
-                className="border-t border-t-gray-800 hover:bg-gray-900"
+                className="border-t border-t-[var(--color-border)] hover:bg-[var(--color-surface)]"
               >
                 {row.getVisibleCells().map(cell => (
                   <td key={cell.id} className="p-3">
@@ -149,16 +151,17 @@ export default function Home() {
             ))}
           </tbody>
         </table>
-        <div className="flex justify-center items-center mt-5">
-          <div className="bg-gray-800 w-1/3 py-2 px-1 rounded-full flex justify-evenly items-center">
+        {/* pagination */}
+        <div className="flex justify-center items-center my-5">
+          <div className="bg-[var(--color-surface)] shadow-md w-1/3 py-2 px-1 rounded-full flex justify-evenly items-center">
             {[1, 2, 3, 4, 5].map((num) => (
               <button
                 key={num}
                 className={`
                   px-3 py-1 rounded-full transition-colors duration-200
                   ${page === num 
-                    ? "text-emerald-400 font-bold bg-gray-700" // active page
-                    : "text-gray-400 hover:text-white"}        // inactive page
+                    ? "text-[var(--color-text)] bg-[var(--color-accent)]" // active page
+                    : "text-[var(--color-text-secondary)] hover:bg-[var(--color-accent-hover)]"}        // inactive page
                 `}
                 disabled={page === num}
                 onClick={() => {

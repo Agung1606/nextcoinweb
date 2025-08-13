@@ -16,9 +16,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="">
       <body
-        className={`flex h-screen ${rubik.className} antialiased`}
+        className={`bg-[var(--color-bg)] text-[var(--color-text)] flex h-screen ${rubik.className} antialiased`}
       >
         {/* left sidebar */}
         <Sidebar />

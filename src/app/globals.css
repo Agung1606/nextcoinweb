@@ -1,26 +1,48 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* 🎨 Theme tokens - LIGHT defaults */
+@theme {
+  --color-bg: #0EA5E90A;
+  --color-surface: white;
+  --color-border: #e5e5e5;
+
+  --color-text: #1a1a1a;
+  --color-text-secondary: #555;
+  --color-text-muted: #888;
+
+  --color-state-danger: #EA3943;
+  --color-state-success: #16C784;
+
+  --color-chart-teal: #00BFA6;
+  --color-chart-amber: #FFB300;
+  --color-chart-purple: #8E7CC3;
+  --color-chart-coral: #FF6F61;
+
+  --color-accent: #0EA5E9;
+  --color-accent-hover: #0EA5E98A;
+  --color-accent-secondary: #FFB300;
+  
+  /* Dark variants stored separately */
+  --color-dark-bg: #121212;
+  --color-dark-surface: #1E1E1E;
+  --color-dark-border: #2A2A2A;
+  --color-dark-text: #E0E0E0;
+  --color-dark-text-secondary: #B0B0B0;
+  --color-dark-text-muted: #7A7A7A;
+  --color-dark-accent: #0EA5E9;
+  --color-dark-accent-hover: #0EA5E98A;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* 🌙 Dark mode overrides */
+@layer base {
+  .dark {
+    --color-bg: var(--color-dark-bg);
+    --color-surface: var(--color-dark-surface);
+    --color-border: var(--color-dark-border);
+    --color-text: var(--color-dark-text);
+    --color-text-secondary: var(--color-dark-text-secondary);
+    --color-text-muted: var(--color-dark-text-muted);
+    --color-accent: var(--color-dark-accent);
+    --color-accent-hover: var(--color-dark-accent-hover);
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }

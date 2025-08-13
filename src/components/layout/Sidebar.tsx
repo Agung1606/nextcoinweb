@@ -14,7 +14,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 flex flex-col border-r border-gray-600">
+    <aside className="w-64 flex flex-col border-r border-[var(--color-border)]">
       {/* Logo */}
       <div className="flex items-center justify-center font-bold mb-12 mt-2">
         <Image src={"/nc-mascot.png"} alt="Picture of NC mascot" width={45} height={45} />
@@ -31,8 +31,8 @@ export default function Sidebar() {
               href={href}
               className={`flex items-center gap-3 px-4 py-2 rounded-lg mb-2 transition-colors ${
                 active
-                  ? "bg-gray-900 text-white"
-                  : "text-gray-400 hover:bg-gray-900"
+                  ? "bg-[var(--color-accent)]"
+                  : "text-[var(--color-text-secondary)] hover:bg-[var(--color-accent-hover)]"
               }`}
             >
               <Icon size={20} />
