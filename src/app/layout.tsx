@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/layout/Sidebar";
+import { Providers } from "./providers";
 
 const rubik = Rubik({ subsets: ["latin"]})
 
@@ -15,16 +16,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en" className="">
       <body
         className={`bg-[var(--color-bg)] text-[var(--color-text)] flex h-screen ${rubik.className} antialiased`}
       >
-        {/* left sidebar */}
-        <Sidebar />
-        <main className="flex-1 p-6 overflow-y-auto">
-          {children}
-        </main>
+          <Providers>
+            {/* left sidebar */}
+            <Sidebar />
+            <main className="flex-1 p-6 overflow-y-auto">
+              {children}
+            </main>
+          </Providers>
       </body>
     </html>
   );

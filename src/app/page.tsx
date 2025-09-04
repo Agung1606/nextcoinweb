@@ -1,46 +1,28 @@
 "use client"
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
+import Image from "next/image";
+import { useQuery } from "@tanstack/react-query"; 
 import {
   useReactTable,
   getCoreRowModel,
   getSortedRowModel,
   flexRender
 } from "@tanstack/react-table";
-import axios from "axios";
 import millify from "millify";
+import { fetchCoinsListMarket } from "@/api/coingecko";
 
 
 // home page (market overview)
 export default function Home() {
   const tableRef = useRef<HTMLTableElement | null>(null);
-  const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
-  
-  // Fetch data from CoinGecko API
-  useEffect(() => {
-    // TODO: create loading state
-    const fetchData = async () => {
-      const res = await axios.get(
-        "https://api.coingecko.com/api/v3/coins/markets",
-        {
-          params: {
-            vs_currency: "usd",
-            order: "market_cap_desc",
-            per_page: 20,
-            page: page,
-            sparkline: false
-          }
-        },
-      );
-      setData(res.data);
-    };
 
-    fetchData();
-
-    // Optional: refresh every 30s
-    const interval = setInterval(fetchData, 30000);
-    return () => clearInterval(interval);
-  }, [page]);
+  const {data, isLoading} = useQuery({
+    queryKey: ["markets", page],
+    queryFn: () => fetchCoinsListMarket({ page: page }),
+    refetchInterval: 30000,
+    staleTime: 1000 * 60
+  })
 
   // Table columns
   const columns = [
@@ -53,11 +35,12 @@ export default function Home() {
       accessorKey: "name",
       header: "Coin",
       cell: ({ row }: any) => (
-        <div className="flex items-center gap-2 cursor-pointer">
-          <img
-            src={row.original.image}
-            alt={row.original.name}
-            className="w-6 h-6"
+        <div className="flex items-center gap-x-4 cursor-pointer">
+          <Image 
+            src={row.original.image} 
+            alt={row.original.name} 
+            width={28} 
+            height={28} 
           />
           <span className="text-sm font-semibold">{row.original.name}</span> <span className="uppercase text-sm text-[var(--color-text-secondary)]">{row.original.symbol}</span>
         </div>
@@ -109,6 +92,12 @@ export default function Home() {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
+
+  if(isLoading) return (
+    <div className="w-full min-h-screen flex justify-center items-center">
+      <p>Loading...</p>
+    </div>
+  )
 
   return (
     <div>

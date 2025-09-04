@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.85.9",
     "@tanstack/react-table": "^8.21.3",
     "axios": "^1.11.0",
     "lightweight-charts": "^5.0.8",
