@@ -15,3 +15,11 @@ export const fetchCoinsListMarket = async ({ page }: { page: number }) => {
       );
       return res.data;
 }
+
+export const searchCoins = async (query: string) => {
+  if (!query) return [];
+  const res = await axios.get("https://api.coingecko.com/api/v3/search", {
+    params: { query },
+  });
+  return res.data.coins;
+}

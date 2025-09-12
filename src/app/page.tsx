@@ -10,6 +10,8 @@ import {
 } from "@tanstack/react-table";
 import millify from "millify";
 import { fetchCoinsListMarket } from "@/api/coingecko";
+import SearchDialog from "@/components/SearchDialog";
+import { X, Search } from "lucide-react";
 
 
 // home page (market overview)
@@ -101,6 +103,16 @@ export default function Home() {
 
   return (
     <div>
+      <div className="flex justify-end mb-8 mx-6">
+        <SearchDialog 
+          trigger={
+            <button className="bg-gray-200/60 hover:bg-gray-200 flex items-center gap-x-2 px-4 py-1 rounded-md">
+              <Search className="w-4 h-4 text-gray-700" />
+              <p className="text-sm text-gray-700">Search</p>
+            </button>
+          }
+        />
+      </div>
       <div className="overflow-x-auto">
         <table ref={tableRef} className="min-w-full">
           <thead>
