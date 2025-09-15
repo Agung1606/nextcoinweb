@@ -13,7 +13,7 @@ export const fetchCoinsListMarket = async ({ page }: { page: number }) => {
           }
         },
       );
-      return res.data;
+  return res.data;
 }
 
 export const searchCoins = async (query: string) => {

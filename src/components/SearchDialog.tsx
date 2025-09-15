@@ -4,8 +4,9 @@ import React, { ReactNode, useState } from 'react'
 import { useDebounce } from 'use-debounce'
 import { useQuery } from '@tanstack/react-query'
 import { searchCoins } from '@/api/coingecko'
-import { Search } from 'lucide-react'
 import * as Dialog from '@radix-ui/react-dialog'
+import Image from 'next/image'
+import Link from 'next/link'
 
 type Props = {
   trigger: ReactNode
@@ -52,11 +53,12 @@ const SearchDialog = (props: Props) => {
             {data?.length > 0 && (
               <ul className="space-y-2 max-h-64 overflow-y-auto pr-2">
                 {data.map((coin: any) => (
-                  <li key={coin.id} className="flex items-center gap-2 p-1 cursor-pointer hover:border-b hover:border-b-gray-400">
-                    <img
+                  <Link href={`/crypto/${coin.id}`} key={coin.id} className="flex items-center gap-2 p-1 cursor-pointer hover:border-b hover:border-b-gray-400">
+                    <Image
                       src={coin.large}
                       alt={coin.name}
-                      className="h-6 w-6"
+                      width={22}
+                      height={22}
                     />
                     <span className='truncate'>
                       {coin.name}
@@ -64,7 +66,7 @@ const SearchDialog = (props: Props) => {
                     <span className='text-xs text-gray-400'>
                       ({coin.symbol.toUpperCase()})
                     </span>
-                  </li>
+                  </Link>
                 ))}
               </ul>
             )}

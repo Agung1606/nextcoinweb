@@ -22,13 +22,7 @@ export default function RootLayout({
       <body
         className={`bg-[var(--color-bg)] text-[var(--color-text)] flex h-screen ${rubik.className} antialiased`}
       >
-          <Providers>
-            {/* left sidebar */}
-            <Sidebar />
-            <main className="flex-1 p-6 overflow-y-auto">
-              {children}
-            </main>
-          </Providers>
+          <Providers>{children}</Providers>
       </body>
     </html>
   );

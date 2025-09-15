@@ -11,7 +11,8 @@ import {
 import millify from "millify";
 import { fetchCoinsListMarket } from "@/api/coingecko";
 import SearchDialog from "@/components/SearchDialog";
-import { X, Search } from "lucide-react";
+import { Search } from "lucide-react";
+import Link from "next/link";
 
 
 // home page (market overview)
@@ -37,7 +38,7 @@ export default function Home() {
       accessorKey: "name",
       header: "Coin",
       cell: ({ row }: any) => (
-        <div className="flex items-center gap-x-4 cursor-pointer">
+        <Link href={`/crypto/${row.original.id}`} className="flex items-center gap-x-4 cursor-pointer">
           <Image 
             src={row.original.image} 
             alt={row.original.name} 
@@ -45,7 +46,7 @@ export default function Home() {
             height={28} 
           />
           <span className="text-sm font-semibold">{row.original.name}</span> <span className="uppercase text-sm text-[var(--color-text-secondary)]">{row.original.symbol}</span>
-        </div>
+        </Link>
       )
     },
     {
