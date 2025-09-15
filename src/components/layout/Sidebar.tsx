@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { BarChart2, Star } from "lucide-react"; // nice icons
+import { BarChart2, Star } from "lucide-react";
 
 export default function Sidebar() {
   const pathname = usePathname();

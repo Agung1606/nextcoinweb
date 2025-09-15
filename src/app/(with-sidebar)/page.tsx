@@ -66,7 +66,7 @@ export default function Home() {
               value >= 0 ? "text-[var(--color-state-success)]" : "text-[var(--color-state-danger)]"
             } text-sm`}
           >
-            {value.toFixed(2)}%
+            {value?.toFixed(2)}%
           </span>
         );
       }
@@ -107,9 +107,9 @@ export default function Home() {
       <div className="flex justify-end mb-8 mx-6">
         <SearchDialog 
           trigger={
-            <button className="bg-gray-200/60 hover:bg-gray-200 flex items-center gap-x-2 px-4 py-1 rounded-md">
-              <Search className="w-4 h-4 text-gray-700" />
-              <p className="text-sm text-gray-700">Search</p>
+            <button className="bg-[var(--color-border)] hover:bg-[var(--color-surface)] flex items-center gap-x-2 px-4 py-1 rounded-md">
+              <Search className="w-4 h-4" />
+              <p className="text-sm">Search</p>
             </button>
           }
         />

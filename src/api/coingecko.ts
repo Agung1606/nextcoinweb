@@ -23,3 +23,8 @@ export const searchCoins = async (query: string) => {
   });
   return res.data.coins;
 }
+
+export const trendingSearchList = async () => {
+  const res = await axios.get("https://api.coingecko.com/api/v3/search/trending");
+  return res.data.coins;
+}

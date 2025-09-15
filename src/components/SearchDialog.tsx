@@ -3,13 +3,45 @@
 import React, { ReactNode, useState } from 'react'
 import { useDebounce } from 'use-debounce'
 import { useQuery } from '@tanstack/react-query'
-import { searchCoins } from '@/api/coingecko'
+import { searchCoins, trendingSearchList } from '@/api/coingecko'
 import * as Dialog from '@radix-ui/react-dialog'
 import Image from 'next/image'
 import Link from 'next/link'
+import { X, Search } from 'lucide-react'
 
 type Props = {
   trigger: ReactNode
+}
+
+const ItemCoin = ({
+  id, 
+  imageUrl, 
+  name, 
+  symbol
+}: {
+  id: string; 
+  imageUrl: string, 
+  name: string, 
+  symbol: string
+}) => {
+  return (
+    <Link 
+      href={`/crypto/${id}`} 
+      className="flex items-center gap-2 p-2 cursor-pointer rounded-md bg-[var(--color-border)] hover:bg-[var(--color-accent-hover)]">
+      <Image
+        src={imageUrl}
+        alt={name}
+        width={22}
+        height={22}
+      />
+      <span className='truncate'>
+        {name}
+      </span>
+      <span className='text-xs text-gray-400'>
+        ({symbol.toUpperCase()})
+      </span>
+    </Link>
+  )
 }
 
 const SearchDialog = (props: Props) => {
@@ -22,6 +54,11 @@ const SearchDialog = (props: Props) => {
     enabled: debouncedQuery.length > 0, // only run when user has typed something
   });
 
+  const {data: trendingListData} = useQuery({
+    queryKey: ["trendingList"],
+    queryFn: () => trendingSearchList(),
+  })
+
   return (
     <Dialog.Root>
       {/* use parent-provided trigger */}
@@ -32,41 +69,62 @@ const SearchDialog = (props: Props) => {
       <Dialog.Portal>
         <Dialog.Overlay className='fixed inset-0 bg-black/50' />
         <Dialog.Content
-          className='fixed left-1/2 top-1/2 w-[90%] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl bg-white p-6 shadow-lg focus:outline-none'
+          className='fixed left-1/2 top-1/2 w-[50%] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-[var(--color-surface)] py-2 px-4 shadow-lg focus:outline-none'
+          aria-describedby='search-list'
         >
-          <div>
-            <Dialog.Title className='text-sm mb-4'>
+            <Dialog.Title hidden>
               Search Coins
             </Dialog.Title>
+
+          <div className='flex items-center'>
+            <Search className='w-5 h-5' />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search coin..."
+              className="w-full rounded px-3 py-2 focus:outline-none placeholder:font-semibold"
+              />
+              <Dialog.Close asChild>
+                <button className='cursor-pointer'>
+                  <X className='w-5 h-5' />
+                </button>
+              </Dialog.Close>
           </div>
 
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search coins..."
-            className="w-full rounded border px-3 py-2 focus:outline-none"
-          />
+          <div className={`${isLoading && "hidden"} mt-4`}>
+            <p className='mb-2 text-sm font-semibold'>Trending crypto 🔥</p>
+            {!data && trendingListData && (
+              <ul className='space-y-2 max-h-96 overflow-y-auto pr-2'>
+                {trendingListData.map((coin: any) => (
+                  <ItemCoin 
+                    key={coin.item.id}
+                    id={coin.item.id}
+                    imageUrl={coin.item.large}
+                    name={coin.item.name}
+                    symbol={coin.item.symbol}
+                  />
+                ))}
+              </ul>
+            )}
+          </div>
 
           <div className="mt-4">
-            {isLoading && <p>Loading...</p>}
+            {isLoading && (
+              <div className='h-96'>
+                <p>Loading...</p>
+              </div>
+            )}
             {data?.length > 0 && (
-              <ul className="space-y-2 max-h-64 overflow-y-auto pr-2">
+              <ul className="space-y-2 max-h-96 overflow-y-auto pr-2">
                 {data.map((coin: any) => (
-                  <Link href={`/crypto/${coin.id}`} key={coin.id} className="flex items-center gap-2 p-1 cursor-pointer hover:border-b hover:border-b-gray-400">
-                    <Image
-                      src={coin.large}
-                      alt={coin.name}
-                      width={22}
-                      height={22}
-                    />
-                    <span className='truncate'>
-                      {coin.name}
-                    </span>
-                    <span className='text-xs text-gray-400'>
-                      ({coin.symbol.toUpperCase()})
-                    </span>
-                  </Link>
+                  <ItemCoin 
+                    key={coin.id}
+                    id={coin.id}
+                    imageUrl={coin.large}
+                    name={coin.name}
+                    symbol={coin.symbol}
+                  />
                 ))}
               </ul>
             )}
