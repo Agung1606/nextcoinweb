@@ -16,6 +16,17 @@ export const fetchCoinsListMarket = async ({ page }: { page: number }) => {
   return res.data;
 }
 
+export const coinDataByID = async ({ id }: { id: string }) => {
+  const res = await axios.get(`https://api.coingecko.com/api/v3/coins/${id}`, {
+    params: {
+      community_data: false,
+      developer_data: false
+    }
+  })
+
+  return res.data;
+}
+
 export const searchCoins = async (query: string) => {
   if (!query) return [];
   const res = await axios.get("https://api.coingecko.com/api/v3/search", {

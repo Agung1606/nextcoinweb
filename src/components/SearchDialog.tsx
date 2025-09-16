@@ -111,7 +111,7 @@ const SearchDialog = (props: Props) => {
 
           <div className="mt-4">
             {isLoading && (
-              <div className='h-96'>
+              <div className='h-96 flex justify-center items-center'>
                 <p>Loading...</p>
               </div>
             )}
