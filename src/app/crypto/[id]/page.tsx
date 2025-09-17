@@ -1,11 +1,12 @@
 "use client"
 
-import { coinDataByID } from '@/api/coingecko';
+import { coinDataByID, fetchOHLCByID } from '@/api/coingecko';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import React, { use } from 'react'
 import millify from 'millify';
-import { Infinity } from 'lucide-react';
+import { InfinityIcon } from 'lucide-react';
+import CandleStickChart from '@/components/CandleStickChart';
 
 const GridItem = ({
   text,
@@ -14,7 +15,7 @@ const GridItem = ({
   className
 }: {
   text: string;
-  data: any;
+  data: string | number | undefined;
   symbol?: string;
   className?: string;
 }) => {
@@ -23,7 +24,7 @@ const GridItem = ({
       <p className='text-sm'>{text}</p>
       {data 
         ? <p className="font-semibold">{data} {symbol}</p> 
-        : <Infinity className="w-10 h-10" />}
+        : <InfinityIcon className="w-10 h-10" />}
     </div>
   )
 };
@@ -34,15 +35,22 @@ function CryptoInfo({ params }: { params: Promise<{ id: string }> }) {
   const { data, isLoading } = useQuery({
     queryKey: ["coins", id],
     queryFn: () => coinDataByID({ id: id }),
-    refetchInterval: 1000,
+    refetchInterval: 30000,
     staleTime: 1000 * 60
   })
 
-  if(isLoading) return <div>Loading...</div>
+  const { data: dataOHLC, isLoading: isLoadingOHLC } = useQuery({
+    queryKey: ["coinOHLC", id],
+    queryFn: () => fetchOHLCByID({ id: id, vs_currency: "usd", days: 7 }),
+    refetchInterval: 30000,
+    staleTime: 1000 * 60
+  })
+
+  if(isLoading || isLoadingOHLC) return <div>Loading...</div>
 
   return (
-    <div>
-      <aside className='h-full flex flex-col px-4 py-2 border-r border-[var(--color-border)]'>
+    <div className='flex w-full flex-col lg:flex-row gap-6'>
+      <aside className='w-full lg:w-72 flex-shrink-0 h-full flex flex-col px-4 py-2 border-r border-[var(--color-border)]'>
         {/* price info */}
         <div className='flex flex-col gap-y-6'>
           <div className='flex items-center gap-x-2'>
@@ -66,8 +74,8 @@ function CryptoInfo({ params }: { params: Promise<{ id: string }> }) {
           <div className='flex items-center gap-x-2'>
             <p className='text-4xl font-semibold'>${data?.market_data?.current_price?.usd.toLocaleString()}</p>
             <p 
-              className={`text-sm font-semibold ${data?.market_data?.price_change_percentage_24h >= 0 ? "text-[var(--color-state-success)]" : "text-[var(--color-state-danger)]"}`}>
-              {data?.market_data?.price_change_percentage_24h.toFixed(2)}% (1d)
+              className={`text-xs font-semibold ${data?.market_data?.price_change_percentage_24h >= 0 ? "text-[var(--color-state-success)]" : "text-[var(--color-state-danger)]"}`}>
+              {data?.market_data?.price_change_percentage_24h.toFixed(2) ?? "N/A"}% (1d)
             </p>
           </div>
         </div>
@@ -75,16 +83,16 @@ function CryptoInfo({ params }: { params: Promise<{ id: string }> }) {
         <div className="grid grid-cols-2 gap-2 mt-6">
           <GridItem 
             text='Market cap' 
-            data={`$${millify(data?.market_data?.market_cap?.usd)}`} 
+            data={`$${millify(data?.market_data?.market_cap?.usd) ?? "N/A"}`} 
             className='col-span-2' 
           />
           <GridItem 
             text='FDV' 
-            data={`$${millify(data?.market_data?.fully_diluted_valuation?.usd)}`} 
+            data={`$${millify(data?.market_data?.fully_diluted_valuation?.usd) ?? "N/A"}`} 
           />
           <GridItem 
             text='Total supply' 
-            data={`${millify(data?.market_data?.total_supply)}`}
+            data={`${millify(data?.market_data?.total_supply) ?? "N/A"}`}
             symbol={data?.symbol.toUpperCase()}
           />
           <GridItem 
@@ -93,8 +101,8 @@ function CryptoInfo({ params }: { params: Promise<{ id: string }> }) {
             symbol={data?.symbol.toUpperCase()}
           />
           <GridItem 
-            text='Circulating supply' 
-            data={`${millify(data?.market_data?.circulating_supply)}`} 
+            text='Circ. supply' 
+            data={`${millify(data?.market_data?.circulating_supply) ?? "N/A"}`} 
             symbol={data?.symbol.toUpperCase()}
           />
         </div>
@@ -138,6 +146,10 @@ function CryptoInfo({ params }: { params: Promise<{ id: string }> }) {
 
         </div>
       </aside>
+
+      <div className='flex-1'>
+        <CandleStickChart data={dataOHLC} />
+      </div>
     </div>
   )
 }

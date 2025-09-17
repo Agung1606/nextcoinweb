@@ -1,3 +1,4 @@
+import { transformCGtoLWC } from "@/lib/charts";
 import axios from "axios"
 
 export const fetchCoinsListMarket = async ({ page }: { page: number }) => {
@@ -38,4 +39,17 @@ export const searchCoins = async (query: string) => {
 export const trendingSearchList = async () => {
   const res = await axios.get("https://api.coingecko.com/api/v3/search/trending");
   return res.data.coins;
+}
+
+export const fetchOHLCByID = async ({ id, vs_currency, days }: { id: string, vs_currency: string, days: 1 | 7 | 14 | 30 | 90 | 180 | 365}) => {
+  const res = await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/ohlc`, {
+    params: {
+      vs_currency: vs_currency,
+      days: days
+    }
+  })
+
+  const data = transformCGtoLWC(res.data ?? []);
+  
+  return data;
 }

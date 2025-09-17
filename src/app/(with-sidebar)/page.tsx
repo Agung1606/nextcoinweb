@@ -117,7 +117,7 @@ export default function Home() {
       <div className="overflow-x-auto">
         <table ref={tableRef} className="min-w-full">
           <thead>
-            {table.getHeaderGroups().map(headerGroup => (
+            {table?.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => {
                   const sortDirection = header.column.getIsSorted();
@@ -136,7 +136,7 @@ export default function Home() {
             ))}
           </thead>
           <tbody>
-            {table.getRowModel().rows.map(row => (
+            {table?.getRowModel().rows.map(row => (
               <tr
                 key={row.id}
                 className="border-t border-t-[var(--color-border)] hover:bg-[var(--color-surface)]"
