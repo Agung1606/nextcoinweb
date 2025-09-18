@@ -3,10 +3,10 @@
 import { coinDataByID, fetchOHLCByID } from '@/api/coingecko';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
-import React, { use } from 'react'
+import React, { use, useState } from 'react'
 import millify from 'millify';
-import { InfinityIcon } from 'lucide-react';
-import CandleStickChart from '@/components/CandleStickChart';
+import { InfinityIcon, CandlestickChartIcon, ChartLineIcon } from 'lucide-react';
+import Chart from '@/components/Chart';
 
 const GridItem = ({
   text,
@@ -31,6 +31,7 @@ const GridItem = ({
 
 function CryptoInfo({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
+  const [chartType, setChartType] = useState<"candleStick" | "chartArea">("candleStick")
 
   const { data, isLoading } = useQuery({
     queryKey: ["coins", id],
@@ -155,7 +156,23 @@ function CryptoInfo({ params }: { params: Promise<{ id: string }> }) {
         </aside>
 
         <div className='flex-1 h-full p-4'>
-          <CandleStickChart data={dataOHLC} />
+          <div className='flex items-center w-fit mb-8 p-1 bg-slate-800 rounded-md'>
+            <button 
+              aria-pressed={chartType === "candleStick"}
+              className={`${chartType === "candleStick" ? "bg-slate-900" : ""} px-2 py-1 rounded-md cursor-pointer`}
+              onClick={() => setChartType("candleStick")}
+            >
+              <CandlestickChartIcon className='w-5 h-5 text-gray-400' />
+            </button>
+            <button 
+              aria-pressed={chartType === "chartArea"}
+              className={`${chartType === "chartArea" ? "bg-slate-900" : ""} px-2 py-1 rounded-md cursor-pointer`}
+              onClick={() => setChartType("chartArea")}
+            >
+              <ChartLineIcon className='w-5 h-5 text-gray-400' />
+            </button>
+          </div>
+          <Chart data={dataOHLC} chartType={chartType} />
         </div>
       </div>
     </div>

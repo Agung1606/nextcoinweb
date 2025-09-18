@@ -1,4 +1,4 @@
-import type { CandlestickData, UTCTimestamp } from 'lightweight-charts';
+import type { CandlestickData, UTCTimestamp, LineData } from 'lightweight-charts';
 
 export function transformCGtoLWC(
   ohlcArray: unknown
@@ -29,4 +29,13 @@ export function transformCGtoLWC(
         close
       };
     });
+}
+
+export function transformOHLCToLine(
+  ohlcArray: CandlestickData<UTCTimestamp>[]
+): LineData<UTCTimestamp>[] {
+  return ohlcArray.map(c => ({
+    time: c.time,
+    value: c.close, // or (open+close)/2 if you want average
+  }));
 }
