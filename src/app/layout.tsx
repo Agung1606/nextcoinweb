@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="">
       <body
-        className={`bg-[var(--color-bg)] text-[var(--color-text)] flex h-screen ${rubik.className} antialiased`}
+        className={`bg-[#0D1421] text-[#E0E0E0] flex h-screen ${rubik.className} antialiased`}
       >
           <Providers>{children}</Providers>
       </body>

@@ -27,7 +27,7 @@ const ItemCoin = ({
   return (
     <Link 
       href={`/crypto/${id}`} 
-      className="flex items-center gap-2 p-2 cursor-pointer rounded-md bg-[var(--color-border)] hover:bg-[var(--color-accent-hover)]">
+      className="flex items-center gap-2 p-2 cursor-pointer rounded-md bg-slate-800 hover:bg-blue-900 hover:border hover:border-blue-600">
       <Image
         src={imageUrl}
         alt={name}
@@ -69,7 +69,7 @@ const SearchDialog = (props: Props) => {
       <Dialog.Portal>
         <Dialog.Overlay className='fixed inset-0 bg-black/50' />
         <Dialog.Content
-          className='fixed left-1/2 top-1/2 w-[50%] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-[var(--color-surface)] py-2 px-4 shadow-lg focus:outline-none'
+          className='fixed left-1/2 top-1/2 w-[50%] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-slate-900 py-2 px-4 shadow-lg focus:outline-none'
           aria-describedby='search-list'
         >
             <Dialog.Title hidden>

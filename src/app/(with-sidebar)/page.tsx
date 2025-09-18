@@ -11,7 +11,7 @@ import {
 import millify from "millify";
 import { fetchCoinsListMarket } from "@/api/coingecko";
 import SearchDialog from "@/components/SearchDialog";
-import { Search } from "lucide-react";
+import { SearchIcon } from "lucide-react";
 import Link from "next/link";
 
 
@@ -45,7 +45,7 @@ export default function Home() {
             width={28} 
             height={28} 
           />
-          <span className="text-sm font-semibold">{row.original.name}</span> <span className="uppercase text-sm text-[var(--color-text-secondary)]">{row.original.symbol}</span>
+          <span className="text-sm font-semibold">{row.original.name}</span> <span className="uppercase text-sm text-gray-400">({row.original.symbol})</span>
         </Link>
       )
     },
@@ -107,9 +107,9 @@ export default function Home() {
       <div className="flex justify-end mb-8 mx-6">
         <SearchDialog 
           trigger={
-            <button className="bg-[var(--color-border)] hover:bg-[var(--color-surface)] flex items-center gap-x-2 px-4 py-1 rounded-md">
-              <Search className="w-4 h-4" />
-              <p className="text-sm">Search</p>
+            <button className="w-[20%] bg-slate-700 hover:bg-slate-600 flex items-center gap-x-2 px-4 py-1 rounded-md">
+              <SearchIcon className="w-4 h-4" />
+              <p className="text-sm text-gray-300">Search</p>
             </button>
           }
         />
@@ -139,7 +139,7 @@ export default function Home() {
             {table?.getRowModel().rows.map(row => (
               <tr
                 key={row.id}
-                className="border-t border-t-[var(--color-border)] hover:bg-[var(--color-surface)]"
+                className="border-t border-t-slate-800 hover:bg-slate-800"
               >
                 {row.getVisibleCells().map(cell => (
                   <td key={cell.id} className="p-3">
@@ -155,15 +155,15 @@ export default function Home() {
         </table>
         {/* pagination */}
         <div className="flex justify-center items-center my-5">
-          <div className="bg-[var(--color-surface)] shadow-md w-1/3 py-2 px-1 rounded-full flex justify-evenly items-center">
+          <div className="bg-slate-700 shadow-md w-1/3 py-2 px-1 rounded-full flex justify-evenly items-center">
             {[1, 2, 3, 4, 5].map((num) => (
               <button
                 key={num}
                 className={`
-                  px-3 py-1 rounded-full transition-colors duration-200
+                  px-3 py-1 rounded-full transition-colors duration-200 cursor-pointer
                   ${page === num 
-                    ? "text-[var(--color-text)] bg-[var(--color-accent)]" // active page
-                    : "text-[var(--color-text-secondary)] hover:bg-[var(--color-accent-hover)]"}        // inactive page
+                    ? "bg-blue-900 border border-blue-600" // active page
+                    : "text-gray-300 hover:bg-blue-900 hover:border hover:border-blue-600"}        // inactive page
                 `}
                 disabled={page === num}
                 onClick={() => {

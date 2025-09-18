@@ -20,8 +20,18 @@ const CandleStickChart: React.FC<ChartProps> = ({ data }) => {
     chartRef.current = createChart(containerRef.current, {
       width: containerRef.current.clientWidth,
       height: 400,
-      layout: { textColor: "black", background: { color: "white" } },
+      layout: { textColor: "#E0E0E0", background: { color: "transparent" } },
       timeScale: { timeVisible: true, secondsVisible: false },
+      grid: {
+        vertLines: {
+          color: "#1d293d", // vertical grid lines
+          style: 1, // solid line
+        },
+        horzLines: {
+          color: "#1d293d", // horizontal grid lines
+          style: 1, // solid line
+        },
+      },
     });
 
     seriesRef.current = chartRef.current.addSeries(CandlestickSeries, {
