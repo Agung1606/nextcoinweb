@@ -1,17 +1,18 @@
 "use client";
 
 import React, { useEffect, useRef } from 'react';
-import { createChart, IChartApi, ISeriesApi, CandlestickData, UTCTimestamp, CandlestickSeries, LineSeries, AreaSeries } from 'lightweight-charts';
+import { createChart, IChartApi, ISeriesApi, CandlestickData, UTCTimestamp, CandlestickSeries, AreaSeries } from 'lightweight-charts';
 import { transformOHLCToLine } from '@/lib/charts';
 
 interface Candle extends CandlestickData<UTCTimestamp> {}
 
 interface ChartProps {
   data?: Candle[];
-  chartType: "candleStick" | "chartArea"
+  chartType: "candleStick" | "chartArea",
+  profit: boolean;
 }
 
-const Chart: React.FC<ChartProps> = ({ data, chartType }) => {
+const Chart: React.FC<ChartProps> = ({ data, chartType, profit }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<'Candlestick' | "Area"> | null>(null);
@@ -67,6 +68,9 @@ const Chart: React.FC<ChartProps> = ({ data, chartType }) => {
     } else {
       seriesRef.current = chartRef.current.addSeries(AreaSeries, {
         lineWidth: 2,
+        lineColor: profit ? '#00ff00' : '#ff0000',
+        topColor: profit ? 'rgba(0,255,0,0.5)' : 'rgba(255,0,0,0.5)',
+        bottomColor: profit ? 'rgba(0,255,0,0.1)' : 'rgba(255,0,0,0.1)',
       })
       seriesRef.current.setData(transformOHLCToLine(data));
     }

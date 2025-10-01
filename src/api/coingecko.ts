@@ -41,7 +41,7 @@ export const trendingSearchList = async () => {
   return res.data.coins;
 }
 
-export const fetchOHLCByID = async ({ id, vs_currency, days }: { id: string, vs_currency: string, days: 1 | 7 | 14 | 30 | 90 | 180 | 365}) => {
+export const fetchOHLCByID = async ({ id, vs_currency, days }: { id: string, vs_currency: string, days: number }) => {
   const res = await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/ohlc`, {
     params: {
       vs_currency: vs_currency,
