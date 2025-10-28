@@ -13,7 +13,7 @@ import { fetchCoinsListMarket } from "@/api/coingecko";
 import SearchDialog from "@/components/SearchDialog";
 import { SearchIcon } from "lucide-react";
 import Link from "next/link";
-
+import { LoaderFive } from "@/components/ui/loader"
 
 // home page (market overview)
 export default function Home() {
@@ -98,7 +98,7 @@ export default function Home() {
 
   if(isLoading) return (
     <div className="w-full min-h-screen flex justify-center items-center">
-      <p>Loading...</p>
+      <LoaderFive text="Loading..." />
     </div>
   )
 
