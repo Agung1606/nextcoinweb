@@ -1,4 +1,4 @@
-import Sidebar from '@/components/layout/Sidebar';
+import Navbar from '@/components/layout/Navbar';
 import React from 'react'
 
 function SidebarLayout({
@@ -7,9 +7,9 @@ function SidebarLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className='flex w-full h-screen'>
-      <Sidebar />
-      <main className="flex-1 p-6 overflow-y-auto">
+    <div className='flex flex-col w-full h-screen'>
+      <Navbar />
+      <main className="flex-1 overflow-y-auto p-2">
         {children}
       </main>
     </div>

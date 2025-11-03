@@ -1,32 +1,32 @@
 import { transformCGtoLWC } from "@/lib/charts";
-import axios from "axios"
+import axios from "axios";
 
 export const fetchCoinsListMarket = async ({ page }: { page: number }) => {
   const res = await axios.get(
-        "https://api.coingecko.com/api/v3/coins/markets",
-        {
-          params: {
-            vs_currency: "usd",
-            order: "market_cap_desc",
-            per_page: 20,
-            page: page,
-            sparkline: false
-          }
-        },
-      );
+    "https://api.coingecko.com/api/v3/coins/markets",
+    {
+      params: {
+        vs_currency: "usd",
+        order: "market_cap_desc",
+        per_page: 20,
+        page: page,
+        sparkline: false,
+      },
+    }
+  );
   return res.data;
-}
+};
 
 export const coinDataByID = async ({ id }: { id: string }) => {
   const res = await axios.get(`https://api.coingecko.com/api/v3/coins/${id}`, {
     params: {
       community_data: false,
-      developer_data: false
-    }
-  })
+      developer_data: false,
+    },
+  });
 
   return res.data;
-}
+};
 
 export const searchCoins = async (query: string) => {
   if (!query) return [];
@@ -34,22 +34,40 @@ export const searchCoins = async (query: string) => {
     params: { query },
   });
   return res.data.coins;
-}
+};
 
 export const trendingSearchList = async () => {
-  const res = await axios.get("https://api.coingecko.com/api/v3/search/trending");
-  return res.data.coins;
-}
+  const res = await axios.get(
+    "https://api.coingecko.com/api/v3/search/trending"
+  );
+  return res.data;
+};
 
-export const fetchOHLCByID = async ({ id, vs_currency, days }: { id: string, vs_currency: string, days: number }) => {
-  const res = await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/ohlc`, {
-    params: {
-      vs_currency: vs_currency,
-      days: days
+export const fetchOHLCByID = async ({
+  id,
+  vs_currency,
+  days,
+}: {
+  id: string;
+  vs_currency: string;
+  days: number;
+}) => {
+  const res = await axios.get(
+    `https://api.coingecko.com/api/v3/coins/${id}/ohlc`,
+    {
+      params: {
+        vs_currency: vs_currency,
+        days: days,
+      },
     }
-  })
+  );
 
   const data = transformCGtoLWC(res.data ?? []);
-  
+
   return data;
-}
+};
+
+export const cryptoGlobalMarketData = async () => {
+  const res = await axios.get(`https://api.coingecko.com/api/v3/global`);
+  return res.data;
+};
