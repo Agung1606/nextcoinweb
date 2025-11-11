@@ -131,6 +131,32 @@ export default function Home() {
 
   return (
     <div>
+      <div className="flex items-center gap-x-4 mb-1">
+        <p className="text-sm">
+          Coins:{" "}
+          <span className="font-semibold">
+            {globalMarketData?.data?.active_cryptocurrencies.toLocaleString()}
+          </span>
+        </p>
+        <p className="text-sm">
+          Exchanges:{" "}
+          <span className="font-semibold">
+            {globalMarketData?.data?.markets.toLocaleString()}
+          </span>
+        </p>
+        <p className="text-sm">
+          Market Cap:{" "}
+          <span className="font-semibold">
+            ${globalMarketData?.data?.total_market_cap.usd.toLocaleString()}
+          </span>
+        </p>
+        <p className="text-sm">
+          Volume:{" "}
+          <span className="font-semibold">
+            ${globalMarketData?.data?.total_volume.usd.toLocaleString()}
+          </span>
+        </p>
+      </div>
       <div className="grid grid-cols-2 gap-2 mb-2">
         <div className="grid grid-rows-2 gap-2">
           <div className="border border-slate-800 py-2 px-4 rounded-lg"></div>
