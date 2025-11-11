@@ -1,10 +1,18 @@
 import { transformCGtoLWC } from "@/lib/charts";
 import axios from "axios";
 
+const api = axios.create({
+  baseURL: "https://api.coingecko.com/api/v3",
+  timeout: 10000, // prevents hanging requests
+});
+
+const handleError = (message: string) => {
+  throw new Error(message);
+};
+
 export const fetchCoinsListMarket = async ({ page }: { page: number }) => {
-  const res = await axios.get(
-    "https://api.coingecko.com/api/v3/coins/markets",
-    {
+  try {
+    const res = await api.get("/coins/markets", {
       params: {
         vs_currency: "usd",
         order: "market_cap_desc",
@@ -12,35 +20,47 @@ export const fetchCoinsListMarket = async ({ page }: { page: number }) => {
         page: page,
         sparkline: false,
       },
-    }
-  );
-  return res.data;
+    });
+    return res.data;
+  } catch (error) {
+    handleError("Failed to fetch market data");
+  }
 };
 
 export const coinDataByID = async ({ id }: { id: string }) => {
-  const res = await axios.get(`https://api.coingecko.com/api/v3/coins/${id}`, {
-    params: {
-      community_data: false,
-      developer_data: false,
-    },
-  });
+  try {
+    const res = await api.get(`/coins/${id}`, {
+      params: {
+        community_data: false,
+        developer_data: false,
+      },
+    });
 
-  return res.data;
+    return res.data;
+  } catch (error) {
+    handleError("Failed to fetch coin data");
+  }
 };
 
 export const searchCoins = async (query: string) => {
   if (!query) return [];
-  const res = await axios.get("https://api.coingecko.com/api/v3/search", {
-    params: { query },
-  });
-  return res.data.coins;
+  try {
+    const res = await api.get("/search", {
+      params: { query },
+    });
+    return res.data.coins;
+  } catch (error) {
+    handleError("Error while searching coins");
+  }
 };
 
 export const trendingSearchList = async () => {
-  const res = await axios.get(
-    "https://api.coingecko.com/api/v3/search/trending"
-  );
-  return res.data;
+  try {
+    const res = await api.get("/search/trending");
+    return res.data;
+  } catch (error) {
+    handleError("Failed to fetch trending lists");
+  }
 };
 
 export const fetchOHLCByID = async ({
@@ -52,22 +72,27 @@ export const fetchOHLCByID = async ({
   vs_currency: string;
   days: number;
 }) => {
-  const res = await axios.get(
-    `https://api.coingecko.com/api/v3/coins/${id}/ohlc`,
-    {
+  try {
+    const res = await api.get(`/coins/${id}/ohlc`, {
       params: {
         vs_currency: vs_currency,
         days: days,
       },
-    }
-  );
+    });
 
-  const data = transformCGtoLWC(res.data ?? []);
+    const data = transformCGtoLWC(res.data ?? []);
 
-  return data;
+    return data;
+  } catch (error) {
+    handleError("Failed to fetch OHLC");
+  }
 };
 
 export const cryptoGlobalMarketData = async () => {
-  const res = await axios.get(`https://api.coingecko.com/api/v3/global`);
-  return res.data;
+  try {
+    const res = await api.get(`/global`);
+    return res.data;
+  } catch (error) {
+    handleError("Failed to fetch global data");
+  }
 };
